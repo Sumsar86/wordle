@@ -1,0 +1,51 @@
+body {
+	font-family: "Popins", sans-serif;
+}
+
+.square {
+	height: 40px;
+	width: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(248, 239, 239);
+	border: 2px dashed #f69c55;
+	font-size: 20px;
+	text-shadow: 5px 5px 10px white, -5px -5px 10px white, 5px -5px 10px white,
+		-5px 5px 10px white;
+	color: black;
+}
+
+.square.match {
+	background-color: green;
+}
+
+.square.found {
+	background-color: yellow;
+}
+
+.square.wrong {
+	background-color: grey;
+}
+
+.board-row {
+	width: 240px; /* (height * 5 + pading * 4) */
+	height: 40px;
+	padding: 5px;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.game {
+	height: 100vh;
+	display: grid;
+	justify-content: center;
+	align-items: center;
+}
+
+.game-state {
+	width: 700px;
+	height: 40px;
+	text-align: center;
+	font-size: 20px;
+}
