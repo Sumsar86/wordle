@@ -1,6 +1,8 @@
 import "./App.css";
 import React from "react";
 import styled from "styled-components";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
 
 const ButtonEnter = styled.button`
 	background-color: lightgrey;
@@ -54,6 +56,20 @@ const themeFound = {
 };
 const themeWrong = {
 	main: "grey",
+};
+const classes = {
+	root: {
+		flexGrow: 1,
+	},
+	paper: {
+		width: "50px",
+		height: "50px",
+		// padding: "5px",
+		// textAlign: "center",
+		// justifyContent: "center",
+		// alignItems: "center",
+		backgroundColor: "lightblue",
+	},
 };
 
 function CustomButton(props) {
@@ -326,9 +342,28 @@ class Game extends React.Component {
 	render() {
 		return (
 			<div className='game'>
-				<div className='game-rows'>
+				{/* <div className='game-rows'>
 					<Board board={this.state.board} />
-				</div>
+				</div> */}
+				<Grid
+					className='game-grid'
+					container
+					spacing={{ xs: 1, md: 1 }}
+					columns={5}
+					style={{
+						width: "325px",
+						height: "390px",
+						margin: "auto",
+						borderStyle: "solid",
+					}}
+					justifyContent='space-evenly'
+					alignItems='space-evenly'>
+					{Array.from(Array(30)).map((_, index) => (
+						<Grid item xs={1} md={1} key={index}>
+							<Paper style={classes.paper}>A</Paper>
+						</Grid>
+					))}
+				</Grid>
 				<div
 					className='daily-word-meaning'
 					dangerouslySetInnerHTML={{
