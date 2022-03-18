@@ -64,11 +64,9 @@ const classes = {
 	paper: {
 		width: "50px",
 		height: "50px",
-		// padding: "5px",
-		// textAlign: "center",
-		// justifyContent: "center",
-		// alignItems: "center",
-		backgroundColor: "lightblue",
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 };
 
@@ -102,42 +100,42 @@ function CustomButton(props) {
 	return <Button onClick={props.onClick}>{props.value.key}</Button>;
 }
 
-function Square(props) {
-	if (props.value[1] === "match")
-		return <div className='square match'>{props.value[0]}</div>;
-	if (props.value[1] === "found")
-		return <div className='square found'>{props.value[0]}</div>;
-	if (props.value[1] === "wrong")
-		return <div className='square wrong'>{props.value[0]}</div>;
-	return <div className='square'>{props.value[0]}</div>;
-}
+// function Square(props) {
+// 	if (props[1] === "match")
+// 		return <div className='square match'>{props[0]}</div>;
+// 	if (props[1] === "found")
+// 		return <div className='square found'>{props[0]}</div>;
+// 	if (props[1] === "wrong")
+// 		return <div className='square wrong'>{props[0]}</div>;
+// 	return <div className='square'>{props[0]}</div>;
+// }
 
-class Board extends React.Component {
-	renderRow(i) {
-		return (
-			<div className='board-row'>
-				<Square value={this.props.board[i][0]} />
-				<Square value={this.props.board[i][1]} />
-				<Square value={this.props.board[i][2]} />
-				<Square value={this.props.board[i][3]} />
-				<Square value={this.props.board[i][4]} />
-			</div>
-		);
-	}
+// class Board extends React.Component {
+// 	renderRow(i) {
+// 		return (
+// 			<div className='board-row'>
+// 				<Square value={this.props.board[i][0]} />
+// 				<Square value={this.props.board[i][1]} />
+// 				<Square value={this.props.board[i][2]} />
+// 				<Square value={this.props.board[i][3]} />
+// 				<Square value={this.props.board[i][4]} />
+// 			</div>
+// 		);
+// 	}
 
-	render() {
-		return (
-			<div>
-				{this.renderRow(0)}
-				{this.renderRow(1)}
-				{this.renderRow(2)}
-				{this.renderRow(3)}
-				{this.renderRow(4)}
-				{this.renderRow(5)}
-			</div>
-		);
-	}
-}
+// 	render() {
+// 		return (
+// 			<div>
+// 				{this.renderRow(0)}
+// 				{this.renderRow(1)}
+// 				{this.renderRow(2)}
+// 				{this.renderRow(3)}
+// 				{this.renderRow(4)}
+// 				{this.renderRow(5)}
+// 			</div>
+// 		);
+// 	}
+// }
 
 class Keyboard extends React.Component {
 	renderKeyRow(i) {
@@ -339,20 +337,29 @@ class Game extends React.Component {
 			);
 	}
 
+	squareColour(data) {
+		if (data === "match") return "#79b851";
+		if (data === "found") return "#f3c237";
+		if (data === "wrong") return "#a4aec4";
+		return "##dee1e9";
+	}
+
+	textColour(data) {
+		if (data) return 'white';
+		return 'black';
+	}
+
 	render() {
 		return (
 			<div className='game'>
-				{/* <div className='game-rows'>
-					<Board board={this.state.board} />
-				</div> */}
 				<Grid
 					className='game-grid'
 					container
 					spacing={{ xs: 1, md: 1 }}
 					columns={5}
 					style={{
-						width: "325px",
-						height: "390px",
+						width: `${50 * 5 + 15 * 5}px`, //"325px",
+						height: `${50 * 6 + 15 * 6}px`, //"390px",
 						margin: "auto",
 						borderStyle: "solid",
 					}}
@@ -360,14 +367,39 @@ class Game extends React.Component {
 					alignItems='space-evenly'>
 					{Array.from(Array(30)).map((_, index) => (
 						<Grid item xs={1} md={1} key={index}>
-							<Paper style={classes.paper}>A</Paper>
+							<Paper
+								className='paper'
+								style={{
+									...classes.paper,
+									backgroundColor: this.squareColour(
+										this.state.board[Math.floor(index / 5)][
+											index % 5
+										][1]
+									),
+									color: this.textColour(
+										this.state.board[Math.floor(index / 5)][
+											index % 5
+										][1]
+									),
+								}}
+								elevation={3}>
+								{
+									this.state.board[Math.floor(index / 5)][
+										index % 5
+									][0]
+								}
+							</Paper>
 						</Grid>
 					))}
 				</Grid>
 				<div
 					className='daily-word-meaning'
 					dangerouslySetInnerHTML={{
-						__html: this.state.gameOver ? this.state.meaning : null,
+						__html:
+							this.state.gameOver &&
+							this.state.gameState == "Võit!"
+								? this.state.meaning
+								: null,
 					}}
 				/>
 				<div className='game-keyboard'>
