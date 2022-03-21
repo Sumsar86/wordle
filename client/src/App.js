@@ -100,6 +100,45 @@ function CustomButton(props) {
 	return <Button onClick={props.onClick}>{props.value.key}</Button>;
 }
 
+class GridRow extends React.Component {
+	squareColour(data) {
+		if (data === "match") return "#79b851";
+		if (data === "found") return "#f3c237";
+		if (data === "wrong") return "#a4aec4";
+		return "##dee1e9";
+	}
+
+	textColour(data) {
+		if (data) return "white";
+		return "black";
+	}
+
+	render() {
+		return Array.from(Array(30)).map((_, index) => (
+			<Grid item xs={1} md={1} key={index}>
+				<Paper
+					className='paper'
+					style={{
+						...classes.paper,
+						backgroundColor: this.squareColour(
+							this.props.grid[Math.floor(index / 5)][
+								index % 5
+							][1]
+						),
+						color: this.textColour(
+							this.props.grid[Math.floor(index / 5)][
+								index % 5
+							][1]
+						),
+					}}
+					elevation={3}>
+					{this.props.grid[Math.floor(index / 5)][index % 5][0]}
+				</Paper>
+			</Grid>
+		));
+	}
+}
+
 // function Square(props) {
 // 	if (props[1] === "match")
 // 		return <div className='square match'>{props[0]}</div>;
@@ -187,7 +226,7 @@ class Game extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			board: [
+			grid: [
 				Array.from(Array(5), () => ["", null]),
 				Array.from(Array(5), () => ["", null]),
 				Array.from(Array(5), () => ["", null]),
@@ -242,7 +281,7 @@ class Game extends React.Component {
 	handleClick(i, j) {
 		if (this.state.gameOver) return;
 
-		const board = this.state.board.slice();
+		const grid = this.state.grid.slice();
 		const keyData = { ...this.state.keyData };
 		const col = this.state.currentColumn;
 		const row = this.state.currentRow;
@@ -250,15 +289,15 @@ class Game extends React.Component {
 			j >= 0 ? this.state.keyboard[i][j] : i === 0 ? "DEL" : "ENTER";
 
 		if (key === "DEL") {
-			board[row][col > 0 ? col - 1 : 0][0] = "";
+			grid[row][col > 0 ? col - 1 : 0][0] = "";
 			return this.setState({
-				board: board,
+				grid: grid,
 				currentColumn: col > 0 ? col - 1 : 0,
 				gameState: null,
 			});
 		}
 		if (key === "ENTER") {
-			wordExists(board[row]).then((exists) => {
+			wordExists(grid[row]).then((exists) => {
 				if (col < 5 || !exists) {
 					let state;
 					if (col < 5) state = { gameState: "Liiga lühikene!" };
@@ -267,14 +306,14 @@ class Game extends React.Component {
 					return this.setState(state);
 				}
 				const [result, nKeyData] = checkWord(
-					board[row],
+					grid[row],
 					keyData,
 					this.state.dailyWord
 				);
-				board[this.state.currentRow] = result;
+				grid[this.state.currentRow] = result;
 
 				let sum = 0;
-				for (const [, c] of board[this.state.currentRow])
+				for (const [, c] of grid[this.state.currentRow])
 					if (c === "match") sum++;
 				if (sum === 5) {
 					return this.setState({
@@ -290,7 +329,7 @@ class Game extends React.Component {
 				}
 
 				return this.setState({
-					board: board,
+					grid: grid,
 					keyData: nKeyData,
 					currentColumn: 0,
 					currentRow: row < 6 ? row + 1 : 6,
@@ -299,10 +338,10 @@ class Game extends React.Component {
 			});
 			return;
 		}
-		if (board[row][col] && board[row][col][0] === "")
-			board[row][col][0] = key;
+		if (grid[row][col] && grid[row][col][0] === "")
+			grid[row][col][0] = key;
 		return this.setState({
-			board: board,
+			grid: grid,
 			currentColumn: col < 5 ? col + 1 : 5,
 			gameState: null,
 		});
@@ -337,18 +376,6 @@ class Game extends React.Component {
 			);
 	}
 
-	squareColour(data) {
-		if (data === "match") return "#79b851";
-		if (data === "found") return "#f3c237";
-		if (data === "wrong") return "#a4aec4";
-		return "##dee1e9";
-	}
-
-	textColour(data) {
-		if (data) return 'white';
-		return 'black';
-	}
-
 	render() {
 		return (
 			<div className='game'>
@@ -365,39 +392,14 @@ class Game extends React.Component {
 					}}
 					justifyContent='space-evenly'
 					alignItems='space-evenly'>
-					{Array.from(Array(30)).map((_, index) => (
-						<Grid item xs={1} md={1} key={index}>
-							<Paper
-								className='paper'
-								style={{
-									...classes.paper,
-									backgroundColor: this.squareColour(
-										this.state.board[Math.floor(index / 5)][
-											index % 5
-										][1]
-									),
-									color: this.textColour(
-										this.state.board[Math.floor(index / 5)][
-											index % 5
-										][1]
-									),
-								}}
-								elevation={3}>
-								{
-									this.state.board[Math.floor(index / 5)][
-										index % 5
-									][0]
-								}
-							</Paper>
-						</Grid>
-					))}
+					<GridRow grid={this.state.grid} />
 				</Grid>
 				<div
 					className='daily-word-meaning'
 					dangerouslySetInnerHTML={{
 						__html:
 							this.state.gameOver &&
-							this.state.gameState == "Võit!"
+							this.state.gameState === "Võit!"
 								? this.state.meaning
 								: null,
 					}}
