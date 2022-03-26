@@ -1,111 +1,37 @@
 import "./App.css";
 import React from "react";
-import styled from "styled-components";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import { Grid, Paper } from "@mui/material";
 
-const ButtonEnter = styled.button`
-	background-color: lightgrey;
-	color: black;
-	font-size: 20px;
-	height: 50px;
-	width: 120px;
-	border-radius: 3px;
-	margin: 2px;
-	cursor: pointer;
-	text-shadow: 5px 5px 10px white, -5px -5px 10px white, 5px -5px 10px white,
-		-5px 5px 10px white;
-	color: black;
-`;
-const ButtonDel = styled.button`
-	background-color: lightgrey;
-	color: black;
-	font-size: 20px;
-	height: 50px;
-	width: 66px;
-	border-radius: 3px;
-	margin: 2px;
-	cursor: pointer;
-	text-shadow: 5px 5px 10px white, -5px -5px 10px white, 5px -5px 10px white,
-		-5px 5px 10px white;
-	color: black;
-`;
-const Button = styled.button`
-	background-color: ${(props) => props.theme.main};
-	color: black;
-	font-size: 20px;
-	height: 50px;
-	width: 50px;
-	border-radius: 3px;
-	margin: 2px;
-	cursor: pointer;
-	text-shadow: 5px 5px 10px white, -5px -5px 10px white, 5px -5px 10px white,
-		-5px 5px 10px white;
-	color: black;
-`;
-Button.defaultProps = {
-	theme: {
-		main: "lightgrey",
-	},
-};
-const themeMatch = {
-	main: "green",
-};
-const themeFound = {
-	main: "yellow",
-};
-const themeWrong = {
-	main: "grey",
-};
 const classes = {
-	root: {
-		flexGrow: 1,
-	},
-	paper: {
+	paperGrid: {
 		width: "50px",
 		height: "50px",
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
+		fontSize: "28px",
+		fontWeight: "700",
+	userSelect: "none",
+	},
+	paperKeyboard: {
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+		fontSize: "18px",
+		fontWeight: "700",
+		padding: "8px",
+		userSelect: "none",
 	},
 };
 
-function CustomButton(props) {
-	if (props.value.key === "ENTER")
-		return (
-			<ButtonEnter onClick={props.onClick}>{props.value.key}</ButtonEnter>
-		);
-
-	if (props.value.key === "DEL")
-		return <ButtonDel onClick={props.onClick}>{props.value.key}</ButtonDel>;
-
-	if (props.value.data === "match")
-		return (
-			<Button theme={themeMatch} onClick={props.onClick}>
-				{props.value.key}
-			</Button>
-		);
-	if (props.value.data === "found")
-		return (
-			<Button theme={themeFound} onClick={props.onClick}>
-				{props.value.key}
-			</Button>
-		);
-	if (props.value.data === "wrong")
-		return (
-			<Button theme={themeWrong} onClick={props.onClick}>
-				{props.value.key}
-			</Button>
-		);
-	return <Button onClick={props.onClick}>{props.value.key}</Button>;
-}
+const keyboardEnum = Object.freeze({ 12: 0, 11: 1, 9: 2 });
 
 class GridRow extends React.Component {
 	squareColour(data) {
 		if (data === "match") return "#79b851";
 		if (data === "found") return "#f3c237";
 		if (data === "wrong") return "#a4aec4";
-		return "##dee1e9";
+		return "##fbfcff";
 	}
 
 	textColour(data) {
@@ -119,19 +45,15 @@ class GridRow extends React.Component {
 				<Paper
 					className='paper'
 					style={{
-						...classes.paper,
+						...classes.paperGrid,
 						backgroundColor: this.squareColour(
-							this.props.grid[Math.floor(index / 5)][
-								index % 5
-							][1]
+							this.props.grid[Math.floor(index / 5)][index % 5][1]
 						),
 						color: this.textColour(
-							this.props.grid[Math.floor(index / 5)][
-								index % 5
-							][1]
+							this.props.grid[Math.floor(index / 5)][index % 5][1]
 						),
 					}}
-					elevation={3}>
+					elevation={2}>
 					{this.props.grid[Math.floor(index / 5)][index % 5][0]}
 				</Paper>
 			</Grid>
@@ -139,86 +61,126 @@ class GridRow extends React.Component {
 	}
 }
 
-// function Square(props) {
-// 	if (props[1] === "match")
-// 		return <div className='square match'>{props[0]}</div>;
-// 	if (props[1] === "found")
-// 		return <div className='square found'>{props[0]}</div>;
-// 	if (props[1] === "wrong")
-// 		return <div className='square wrong'>{props[0]}</div>;
-// 	return <div className='square'>{props[0]}</div>;
-// }
+class KeyboardRow extends React.Component {
+	squareColour(data) {
+		if (data === "match") return "#79b851";
+		if (data === "found") return "#f3c237";
+		if (data === "wrong") return "#a4aec4";
+		return "#dee1e9";
+	}
 
-// class Board extends React.Component {
-// 	renderRow(i) {
-// 		return (
-// 			<div className='board-row'>
-// 				<Square value={this.props.board[i][0]} />
-// 				<Square value={this.props.board[i][1]} />
-// 				<Square value={this.props.board[i][2]} />
-// 				<Square value={this.props.board[i][3]} />
-// 				<Square value={this.props.board[i][4]} />
-// 			</div>
-// 		);
-// 	}
+	hoverSquareColour(data) {
+		if (data === "match") return "#79b851";
+		if (data === "found") return "#f3c237";
+		if (data === "wrong") return "#a4aec4";
+		return "darkgrey !important";
+	}
 
-// 	render() {
-// 		return (
-// 			<div>
-// 				{this.renderRow(0)}
-// 				{this.renderRow(1)}
-// 				{this.renderRow(2)}
-// 				{this.renderRow(3)}
-// 				{this.renderRow(4)}
-// 				{this.renderRow(5)}
-// 			</div>
-// 		);
-// 	}
-// }
+	textColour(data) {
+		if (data) return "white";
+		return "black";
+	}
 
-class Keyboard extends React.Component {
-	renderKeyRow(i) {
-		let keys = [];
-		let row = this.props.keyboard.keyboard[i];
-		for (let keyIndex in row)
-			keys.push(
-				<CustomButton
-					key={keyIndex}
-					value={{
-						key: row[keyIndex],
-						data: this.props.keyboard.keyData[row[keyIndex]],
+	addButton(index, key) {
+		// console.log(key, this.props.keyboard.keyData[key]);
+		return (
+			<Grid item xs md key={index}>
+				<Paper
+					className={classes.Paper}
+					sx={[
+						{
+							"&:hover": {
+								backgroundColor: this.hoverSquareColour(
+									this.props.keyboard.keyData[key]
+								),
+							},
+						},
+					]}
+					style={{
+						...classes.paperKeyboard,
+						backgroundColor: this.squareColour(
+							this.props.keyboard.keyData[key]
+						),
+						color: this.textColour(
+							this.props.keyboard.keyData[key]
+						),
 					}}
-					onClick={() => this.props.onClick(i, keyIndex)}
-				/>
-			);
-		if (i === 0) {
-			keys.push(
-				<CustomButton
-					key={{ key: -1, data: null }}
-					value={{ key: "DEL", data: null }}
-					onClick={() => this.props.onClick(i, -1)}
-				/>
-			);
-		} else if (i === 1) {
-			keys.push(
-				<CustomButton
-					key={{ key: -2, data: null }}
-					value={{ key: "ENTER", data: null }}
-					onClick={() => this.props.onClick(i, -2)}
-				/>
-			);
-		}
-		return <div>{keys}</div>;
+					onClick={() =>
+						this.props.onClick(
+							keyboardEnum[this.props.keyboard.keyboard.length],
+							index
+						)
+					}>
+					{this.props.keyboard.keyboard[index]}
+				</Paper>
+			</Grid>
+		);
+	}
+
+	addEnterButton() {
+		return (
+			<Grid item xs md key={-2}>
+				<Paper
+					className={classes.Paper}
+					sx={[
+						{
+							"&:hover": {
+								backgroundColor: "darkgrey !important",
+							},
+						},
+					]}
+					style={{
+						...classes.paperKeyboard,
+						backgroundColor: "#dee1e9",
+						color: "black",
+					}}
+					onClick={() => this.props.onClick(2, -2)}>
+					ENTER
+				</Paper>
+			</Grid>
+		);
+	}
+
+	addDeleteButton() {
+		return (
+			<Grid item xs md key={-1}>
+				<Paper
+					className={classes.Paper}
+					sx={[
+						{
+							"&:hover": {
+								backgroundColor: "darkgrey !important",
+							},
+						},
+					]}
+					style={{
+						...classes.paperKeyboard,
+						backgroundColor: "#dee1e9",
+						color: "black",
+					}}
+					onClick={() => this.props.onClick(2, -1)}>
+					DEL
+				</Paper>
+			</Grid>
+		);
 	}
 
 	render() {
-		return (
-			<div>
-				<div className='key-row'> {this.renderKeyRow(0)}</div>
-				<div className='key-row'> {this.renderKeyRow(1)}</div>
-				<div className='key-row'> {this.renderKeyRow(2)}</div>
-			</div>
+		let row = Array.from(Array(this.props.keyboard.keyboard.length)).map(
+			(_, index) =>
+				this.addButton(index, this.props.keyboard.keyboard[index])
 		);
+
+		if (keyboardEnum[this.props.keyboard.keyboard.length] == 2) {
+			row.splice(0, 0, this.addDeleteButton());
+			row.splice(
+				this.props.keyboard.keyboard.length + 1,
+				0,
+				this.addEnterButton()
+			);
+		}
+
+		return row;
 	}
 }
 
@@ -278,15 +240,19 @@ class Game extends React.Component {
 		};
 	}
 
-	handleClick(i, j) {
-		if (this.state.gameOver) return;
+	handleClick(i, keyIndex) {
+		if (this.state.gameOver || (!i && i >= 3)) return;
 
 		const grid = this.state.grid.slice();
 		const keyData = { ...this.state.keyData };
 		const col = this.state.currentColumn;
 		const row = this.state.currentRow;
 		const key =
-			j >= 0 ? this.state.keyboard[i][j] : i === 0 ? "DEL" : "ENTER";
+			keyIndex >= 0
+				? this.state.keyboard[i][keyIndex]
+				: keyIndex === -1
+				? "DEL"
+				: "ENTER";
 
 		if (key === "DEL") {
 			grid[row][col > 0 ? col - 1 : 0][0] = "";
@@ -338,8 +304,7 @@ class Game extends React.Component {
 			});
 			return;
 		}
-		if (grid[row][col] && grid[row][col][0] === "")
-			grid[row][col][0] = key;
+		if (grid[row][col] && grid[row][col][0] === "") grid[row][col][0] = key;
 		return this.setState({
 			grid: grid,
 			currentColumn: col < 5 ? col + 1 : 5,
@@ -388,7 +353,7 @@ class Game extends React.Component {
 						width: `${50 * 5 + 15 * 5}px`, //"325px",
 						height: `${50 * 6 + 15 * 6}px`, //"390px",
 						margin: "auto",
-						borderStyle: "solid",
+						// borderStyle: "solid",
 					}}
 					justifyContent='space-evenly'
 					alignItems='space-evenly'>
@@ -404,16 +369,69 @@ class Game extends React.Component {
 								: null,
 					}}
 				/>
-				<div className='game-keyboard'>
-					<div className='game-state'>{this.state.gameState}</div>
-					<Keyboard
-						keyboard={{
-							keyboard: this.state.keyboard,
-							keyData: this.state.keyData,
-						}}
-						onClick={(i, j) => this.handleClick(i, j)}
-					/>
-				</div>
+				<div className='game-state'>{this.state.gameState}</div>
+				<Grid
+					className='game-keyboard'
+					container
+					spacing={{ xs: 0.2, md: 1 }}
+					style={{
+						width: "60%",
+						minWidth: "400px",
+						height: "60px",
+						margin: "auto",
+						// marginTop: `10%`,
+						// borderStyle: "solid",
+						// borderColor: "darkorange",
+					}}>
+					<Grid
+						className='game-keyboard-row1'
+						container
+						item
+						spacing={{ xs: 0.2, md: 1 }}
+						columns={12}>
+						<KeyboardRow
+							keyboard={{
+								keyboard: this.state.keyboard[0],
+								keyData: this.state.keyData,
+							}}
+							onClick={(i, keyIndex) =>
+								this.handleClick(i, keyIndex)
+							}
+						/>
+					</Grid>
+					<Grid
+						className='game-keyboard-row2'
+						container
+						item
+						spacing={{ xs: 0.2, md: 1 }}
+						columns={11}>
+						<KeyboardRow
+							keyboard={{
+								keyboard: this.state.keyboard[1],
+								keyData: this.state.keyData,
+							}}
+							onClick={(i, keyIndex) =>
+								this.handleClick(i, keyIndex)
+							}
+						/>
+					</Grid>
+					<Grid
+						className='game-keyboard-row3'
+						container
+						item
+						spacing={{ xs: 0.2, md: 1 }}
+						columns={9}>
+						<KeyboardRow
+							keyboard={{
+								keyboard: this.state.keyboard[2],
+								keyData: this.state.keyData,
+							}}
+							onClick={(i, keyIndex) =>
+								this.handleClick(i, keyIndex)
+							}
+						/>
+					</Grid>
+				</Grid>
 			</div>
 		);
 	}
@@ -453,7 +471,7 @@ function checkWord(row, data, dailyWord) {
 	for (const i in word) {
 		if (word[i] === dailyWord[i]) {
 			nRow[i][1] = "match";
-			if (letters[word[i]] <= 1) nData[word[i]] = "match";
+			/*if (letters[word[i]] <= 1)*/ nData[word[i]] = "match";
 			letters[word[i]]--;
 
 			for (const j in word) {
@@ -476,6 +494,7 @@ function checkWord(row, data, dailyWord) {
 		nRow[i][1] = "wrong";
 		if (nData[word[i]] === null) nData[word[i]] = "wrong";
 	}
+
 	return [nRow, nData];
 }
 
