@@ -37,6 +37,15 @@ app.get("/word_of_day", (req, res) => {
 	});
 });
 
+// http://www.eki.ee/dict/shs_liides.html
+// Materjale tohib paigutada oma leheküljele järgmistel tingimustel
+// Päringulahtri või vastuste kõrval peab olema Eesti Keele Instituudi logo või materjali päritolu näitav tekst. Logo/tekst peab olema vormistatud lingina sellele eki.ee lehele, kust materjal pärineb
+// Lehekülg peab olema veebis ligipääsetav ilma registreerimisnõudeta.
+// Muuta võib väljanägemist, aga mitte sisu.
+// Kui mõisted ajax ja json on teile tuttavad, ei ole sõnaraamatu liidese portimine teise veebikeskkonda kuigi keeruline, lisage selleks päringule parameeter Z=json. Kui lisate parameetri &callback=, järgib server jsonp konventsiooni. Näidiseks shs_json.html. Sõnastikusisesed lingid, sobiv css ja javascriptiga tüübiinfo näitamine jääb teie lahendada.
+
+// JSONi kasutamiseks tuleb teil küsida endale parool sõnastike haldajalt (webmaster@eki.ee) ning lisada seegi parameetrina X=minusalasona. Ka muude tehniliste küsimustega palume pöörduda samal meiliaadressil.
+
 app.post("/word_of_day_meaning", (req, res) => {
 	let meaning;
 	const word = req.body.word;
@@ -66,7 +75,7 @@ app.post("/does_word_exist", (req, res) => {
 	]);
 	// collect data from script
 	python.stdout.on("data", function (data) {
-		console.log("Pipe data from python script ...", data.toString());
+		console.log("Pipe data from python script ...");
 		dataToSend = data.toString().replace("\r\n", "") === "true";
 	});
 	// in close event we are sure that stream from child process is closed

@@ -11,7 +11,7 @@ const classes = {
 		alignItems: "center",
 		fontSize: "28px",
 		fontWeight: "700",
-	userSelect: "none",
+		userSelect: "none",
 	},
 	paperKeyboard: {
 		display: "flex",
@@ -53,7 +53,8 @@ class GridRow extends React.Component {
 							this.props.grid[Math.floor(index / 5)][index % 5][1]
 						),
 					}}
-					elevation={2}>
+					elevation={2}
+					square>
 					{this.props.grid[Math.floor(index / 5)][index % 5][0]}
 				</Paper>
 			</Grid>
@@ -82,7 +83,6 @@ class KeyboardRow extends React.Component {
 	}
 
 	addButton(index, key) {
-		// console.log(key, this.props.keyboard.keyData[key]);
 		return (
 			<Grid item xs md key={index}>
 				<Paper
@@ -171,7 +171,7 @@ class KeyboardRow extends React.Component {
 				this.addButton(index, this.props.keyboard.keyboard[index])
 		);
 
-		if (keyboardEnum[this.props.keyboard.keyboard.length] == 2) {
+		if (keyboardEnum[this.props.keyboard.keyboard.length] === 2) {
 			row.splice(0, 0, this.addDeleteButton());
 			row.splice(
 				this.props.keyboard.keyboard.length + 1,
@@ -353,7 +353,7 @@ class Game extends React.Component {
 						width: `${50 * 5 + 15 * 5}px`, //"325px",
 						height: `${50 * 6 + 15 * 6}px`, //"390px",
 						margin: "auto",
-						// borderStyle: "solid",
+						// outlineStyle: "solid",
 					}}
 					justifyContent='space-evenly'
 					alignItems='space-evenly'>
@@ -375,13 +375,12 @@ class Game extends React.Component {
 					container
 					spacing={{ xs: 0.2, md: 1 }}
 					style={{
-						width: "60%",
-						minWidth: "400px",
-						height: "60px",
+						width: "auto",
+						maxWidth: "1000px",
 						margin: "auto",
-						// marginTop: `10%`,
-						// borderStyle: "solid",
-						// borderColor: "darkorange",
+						// marginBottom: `10%`,
+						// outlineStyle: "solid",
+						// outlineColor: "darkorange",
 					}}>
 					<Grid
 						className='game-keyboard-row1'
