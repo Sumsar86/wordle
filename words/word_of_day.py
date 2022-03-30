@@ -19,6 +19,13 @@ def rand_word_per_day(words):
     return choice(words)
 
 
+def rand_word(words):
+    """
+    Returns a random word from list "words" every time called.
+    """
+    return choice(words)
+
+
 def word():
     """
     Opens the text file at PATH.
@@ -30,7 +37,7 @@ def word():
     try:
         with open(PATH, "r", encoding="utf-8") as text_file:
             words = list(map(lambda x: x.strip("\n"), text_file.readlines()))
-        return rand_word_per_day(words)
+        return rand_word(words)
     except IOError as error:
         print(f"Error: could not open file at {PATH}")
         print(error)
